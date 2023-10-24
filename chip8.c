@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 //====================== DATA TYPES ======================//
 
@@ -362,10 +363,6 @@ void debug_info(chip8_t *chip8) {
         }
         break;
 
-    default:
-        printf("Unimplemented Opcode.\n");
-        break; // Unimplemented or invalid opcode
-
     case 0x0A:
         // 0xANNN: Set index register I to NNN
         printf("Set I to NNN (0x%04X)\n", chip8->inst.NNN);
@@ -383,6 +380,9 @@ void debug_info(chip8_t *chip8) {
                chip8->inst.N, chip8->inst.X, chip8->V[chip8->inst.X],
                chip8->inst.Y, chip8->V[chip8->inst.Y], chip8->I);
         break;
+    default:
+        printf("Unimplemented Opcode.\n");
+        break; // Unimplemented or invalid opcode
     }
 }
 #endif
@@ -536,6 +536,17 @@ void emulate_instruct(chip8_t *chip8, config_t *config) {
         chip8->I = chip8->inst.NNN;
         break;
 
+    case 0x0B:
+        // 0xBNNN : Jumps to the address NNN plus V0.
+        chip8->PC = chip8->V[0x0] + chip8->inst.NNN;
+        break;
+
+    case 0x0C:
+        // 0xCXNN : Sets VX to the result of a bitwise and operation on a random
+        // number (Typically: 0 to 255) and NN.
+        chip8->V[chip8->inst.X] = chip8->inst.NN & (rand() % 256);
+        break;
+
     case 0x0D:
         // 0xDXYN: Draw N-height sprite at coords X,Y; Read from memory
         // location I;
@@ -666,6 +677,9 @@ int main(int argc, char **argv) {
     chip8_t chip8 = {0};
     if (!init_chip8(&chip8, rom_name))
         exit(EXIT_FAILURE);
+
+    // Seed random number generator
+    srand(time(NULL));
 
     // Runtime loop
     while (chip8.state != QUIT) {
