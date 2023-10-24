@@ -30,7 +30,7 @@ bool init_sdl(sdl_t *sdl, config_t *config) {
 
     if (!sdl->window) {
         SDL_Log("Could not initialize window %s\n", SDL_GetError);
-        return false:
+        return false;
     }
 
     return true;
