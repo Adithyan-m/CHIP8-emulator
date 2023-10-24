@@ -363,9 +363,29 @@ void debug_info(chip8_t *chip8) {
         }
         break;
 
+    case 0x09:
+        // 0x9XY0: Check if VX != VY; Skip next instruction if so
+        printf("Check if V%X (0x%02X) != V%X (0x%02X), skip next instruction "
+               "if true\n",
+               chip8->inst.X, chip8->V[chip8->inst.X], chip8->inst.Y,
+               chip8->V[chip8->inst.Y]);
+        break;
+
     case 0x0A:
         // 0xANNN: Set index register I to NNN
         printf("Set I to NNN (0x%04X)\n", chip8->inst.NNN);
+        break;
+
+    case 0x0B:
+        // 0xBNNN: Jump to V0 + NNN
+        printf("Set PC to V0 (0x%02X) + NNN (0x%04X); Result PC = 0x%04X\n",
+               chip8->V[0], chip8->inst.NNN, chip8->V[0] + chip8->inst.NNN);
+        break;
+
+    case 0x0C:
+        // 0xCXNN: Sets register VX = rand() % 256 & NN (bitwise AND)
+        printf("Set V%X = rand() %% 256 & NN (0x%02X)\n", chip8->inst.X,
+               chip8->inst.NN);
         break;
 
     case 0x0D:
