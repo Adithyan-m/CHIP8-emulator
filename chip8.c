@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
     emulator_state_t state;
     uint8_t ram[4096];
-    bool display[64 * 23]; // Original Chip8 resolution
+    bool display[64 * 32]; // Original Chip8 resolution
     uint8_t V[16];         // Registers V0 to VF
     uint16_t stack[12];    // Sub routine stack
     u_int16_t *stack_ptr;  // Stack pointer
