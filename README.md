@@ -5,6 +5,8 @@
 
 This is a simple Chip8 emulator implemented in C using the SDL library for graphics. Chip8 is a minimalist interpreted programming language used in the development of games for various retro computer systems. This emulator allows you to play classic Chip8 games on your computer.
 
+![IBM Logo](IBM_Logo.png)
+
 ## What is Chip8?
 
 Chip8 is an interpreted programming language that was originally designed to create games for the COSMAC VIP and Telmac 1800 microcomputers. It uses a virtual machine and provides a set of opcodes that allow developers to create simple 2D games and applications. Chip8 programs are stored in a binary format and run on a virtual machine.
@@ -48,5 +50,5 @@ The emulator uses the Chip8 virtual machine to interpret and execute Chip8 progr
 - run `$ ./chip8.c ROM/<name of rom>` to get started
 -  **Hint** - Tetris uses W and E for left and righ moevement and Q rotate
 
--  
+![Tetris](Tetris.png)
 

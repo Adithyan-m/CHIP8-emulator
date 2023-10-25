@@ -86,8 +86,8 @@ bool init_config(config_t *config) {
     *config = (config_t){
         .window_width = 64,  // CHIP8 X resolution
         .window_height = 32, // CHIP8 Y resoultions
-        .bg_colour = 0xF5FFC900,
-        .fg_colour = 0x804674FF,
+        .bg_colour = 0xD7F4D200,
+        .fg_colour = 0x01BF3AFF,
         .scaler = 20,
         .clk_speed = 800,
 
