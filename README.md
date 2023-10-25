@@ -52,3 +52,4 @@ The emulator uses the Chip8 virtual machine to interpret and execute Chip8 progr
 
 ![Tetris](Tetris.png)
 
+Happy Gaming !
