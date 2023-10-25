@@ -19,9 +19,9 @@ The Chip8 system has a cult following among retro gaming enthusiasts. It's a sim
 
 This emulator is a project created for educational purposes and serves as a simplified implementation of a Chip8 emulator. It may not support all ROMs or features found in more advanced emulators. Feel free to use, modify, or expand upon the code for your own projects.
 
-The ROMS and test ROMS used in this repository is taken from :
+The ROMS and test ROMS used in this repository are taken from :
         - https://github.com/Timendus/chip8-test-suite
-        - https://github.com/cj1128/chip8-emulator/tree/master
+        , https://github.com/cj1128/chip8-emulator/tree/master
         
 ## Implementation
 
