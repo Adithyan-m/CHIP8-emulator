@@ -18,10 +18,17 @@ The Chip8 system has a cult following among retro gaming enthusiasts. It's a sim
 This emulator is implemented in C, leveraging the SDL (Simple DirectMedia Layer) library for graphics and input handling. The project structure consists of the following key components:
 
 - `main.c`: The core emulator code.
-- `roms/`: A directory for storing Chip8 ROMs.
+- `ROMS`: A directory for storing Chip8 ROMs. The roms included in this are taken from various sources and are not written by me
+- `tests`: This folder contain test ROMS to check functionaing of codes
+
+- ROMS Taken from :
+        - https://github.com/Timendus/chip8-test-suite
+        - https://github.com/cj1128/chip8-emulator/tree/master
 
 The emulator uses the Chip8 virtual machine to interpret and execute Chip8 programs. It emulates the Chip8 CPU, memory, display, and input systems. It renders graphics and handles user input through SDL.
 
+- ** ROMS ** - The roms included in this are taken from various and are not written by me
+  
 ## Features
 
 - **Classic Chip8 Support**: The emulator is designed to run classic Chip8 games, preserving the authentic gaming experience.
@@ -31,3 +38,4 @@ The emulator uses the Chip8 virtual machine to interpret and execute Chip8 progr
 - **Keyboard Input**: The emulator maps Chip8 keypad keys to your computer's keyboard. You can customize key mappings as needed in the `handle_input` function in the `main.c` file.
 
 ## Getting Started
+
