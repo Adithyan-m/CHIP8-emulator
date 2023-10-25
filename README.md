@@ -13,17 +13,22 @@ Chip8 is an interpreted programming language that was originally designed to cre
 
 The Chip8 system has a cult following among retro gaming enthusiasts. It's a simple yet fun way to experience the early days of computer gaming. Using this emulator, you can play classic games like Pong, Space Invaders, and Tetris, which were originally developed for the Chip8 platform.
 
+## Acknowledgments
+
+This emulator is a project created for educational purposes and serves as a simplified implementation of a Chip8 emulator. It may not support all ROMs or features found in more advanced emulators. Feel free to use, modify, or expand upon the code for your own projects.
+
+The ROMS and test ROMS used in this repository is taken from :
+        - https://github.com/Timendus/chip8-test-suite
+        - https://github.com/cj1128/chip8-emulator/tree/master
+        
 ## Implementation
 
 This emulator is implemented in C, leveraging the SDL (Simple DirectMedia Layer) library for graphics and input handling. The project structure consists of the following key components:
 
-- `main.c`: The core emulator code.
+- `chip8.c`: The core emulator code.
 - `ROMS`: A directory for storing Chip8 ROMs. The roms included in this are taken from various sources and are not written by me
 - `tests`: This folder contain test ROMS to check functionaing of codes
 
-- ROMS Taken from :
-        - https://github.com/Timendus/chip8-test-suite
-        - https://github.com/cj1128/chip8-emulator/tree/master
 
 The emulator uses the Chip8 virtual machine to interpret and execute Chip8 programs. It emulates the Chip8 CPU, memory, display, and input systems. It renders graphics and handles user input through SDL.
 
@@ -38,4 +43,10 @@ The emulator uses the Chip8 virtual machine to interpret and execute Chip8 progr
 - **Keyboard Input**: The emulator maps Chip8 keypad keys to your computer's keyboard. You can customize key mappings as needed in the `handle_input` function in the `main.c` file.
 
 ## Getting Started
+
+- Pull the repo to your local directory and run `$ make` in the directory to create the executable
+- run `$ ./chip8.c ROM/<name of rom>` to get started
+-  **Hint** - Tetris uses W and E for left and righ moevement and Q rotate
+
+-  
 
