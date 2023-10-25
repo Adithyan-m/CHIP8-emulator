@@ -159,46 +159,163 @@ bool init_chip8(chip8_t *chip8, char rom_name[]) {
 
 //====================== RUNTIME FUNCTIONS ======================//
 
+// CHIP8 Keypad     QWERTY
+//   1 2 3 C        1 2 3 4
+//   4 5 6 D        q w e r
+//   7 8 9 E        a s d f
+//   A 0 B F        z x c v
+
 // Handling Key presses
 void handle_input(chip8_t *chip8) {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        // Exiting Window
         case SDL_QUIT:
-            // Kill Machine
-            chip8->state = QUIT;
-            return;
+            // Exit window; End program
+            chip8->state = QUIT; // Will exit main emulator loop
+            break;
+
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
-
-            case (SDLK_ESCAPE):
-                // Escape key
+            case SDLK_ESCAPE:
+                // Escape key; Exit window & End program
                 chip8->state = QUIT;
                 break;
 
-            case (SDLK_SPACE):
-                // Spacebar key
+            case SDLK_SPACE:
+                // Space bar
                 if (chip8->state == RUNNING) {
-                    chip8->state = PAUSED; // Pause chip8
-                    puts("===== PAUSED =====");
+                    chip8->state = PAUSED; // Pause
+                    puts("==== PAUSED ====");
                 } else {
-                    chip8->state = RUNNING; // Resuming operation
-                    puts("===== RESUMED =====");
+                    chip8->state = RUNNING; // Resume
                 }
+                break;
+
+            // Keypad mapping
+            case SDLK_1:
+                chip8->keypad[0x1] = true;
+                break;
+            case SDLK_2:
+                chip8->keypad[0x2] = true;
+                break;
+            case SDLK_3:
+                chip8->keypad[0x3] = true;
+                break;
+            case SDLK_4:
+                chip8->keypad[0xC] = true;
+                break;
+
+            case SDLK_q:
+                chip8->keypad[0x4] = true;
+                break;
+            case SDLK_w:
+                chip8->keypad[0x5] = true;
+                break;
+            case SDLK_e:
+                chip8->keypad[0x6] = true;
+                break;
+            case SDLK_r:
+                chip8->keypad[0xD] = true;
+                break;
+
+            case SDLK_a:
+                chip8->keypad[0x7] = true;
+                break;
+            case SDLK_s:
+                chip8->keypad[0x8] = true;
+                break;
+            case SDLK_d:
+                chip8->keypad[0x9] = true;
+                break;
+            case SDLK_f:
+                chip8->keypad[0xE] = true;
+                break;
+
+            case SDLK_z:
+                chip8->keypad[0xA] = true;
+                break;
+            case SDLK_x:
+                chip8->keypad[0x0] = true;
+                break;
+            case SDLK_c:
+                chip8->keypad[0xB] = true;
+                break;
+            case SDLK_v:
+                chip8->keypad[0xF] = true;
+                break;
+
+            default:
+                break;
             }
             break;
 
         case SDL_KEYUP:
+            switch (event.key.keysym.sym) {
+            // Keypad mapping
+            case SDLK_1:
+                chip8->keypad[0x1] = false;
+                break;
+            case SDLK_2:
+                chip8->keypad[0x2] = false;
+                break;
+            case SDLK_3:
+                chip8->keypad[0x3] = false;
+                break;
+            case SDLK_4:
+                chip8->keypad[0xC] = false;
+                break;
+
+            case SDLK_q:
+                chip8->keypad[0x4] = false;
+                break;
+            case SDLK_w:
+                chip8->keypad[0x5] = false;
+                break;
+            case SDLK_e:
+                chip8->keypad[0x6] = false;
+                break;
+            case SDLK_r:
+                chip8->keypad[0xD] = false;
+                break;
+
+            case SDLK_a:
+                chip8->keypad[0x7] = false;
+                break;
+            case SDLK_s:
+                chip8->keypad[0x8] = false;
+                break;
+            case SDLK_d:
+                chip8->keypad[0x9] = false;
+                break;
+            case SDLK_f:
+                chip8->keypad[0xE] = false;
+                break;
+
+            case SDLK_z:
+                chip8->keypad[0xA] = false;
+                break;
+            case SDLK_x:
+                chip8->keypad[0x0] = false;
+                break;
+            case SDLK_c:
+                chip8->keypad[0xB] = false;
+                break;
+            case SDLK_v:
+                chip8->keypad[0xF] = false;
+                break;
+
+            default:
+                break;
+            }
+            break;
 
         default:
-            // Invalid/unimplemented key
             break;
         }
     }
 }
-
 // Only compile in Debug mode
 #ifdef DEBUG
 void debug_info(chip8_t *chip8) {
@@ -400,6 +517,23 @@ void debug_info(chip8_t *chip8) {
                chip8->inst.N, chip8->inst.X, chip8->V[chip8->inst.X],
                chip8->inst.Y, chip8->V[chip8->inst.Y], chip8->I);
         break;
+
+    case 0x0E:
+        if (chip8->inst.NN == 0x9E) {
+            // 0xEX9E: Skip next instruction if key in VX is pressed
+            printf("Skip next instruction if key in V%X (0x%02X) is pressed; "
+                   "Keypad value: %d\n",
+                   chip8->inst.X, chip8->V[chip8->inst.X],
+                   chip8->keypad[chip8->V[chip8->inst.X]]);
+
+        } else if (chip8->inst.NN == 0xA1) {
+            // 0xEX9E: Skip next instruction if key in VX is not pressed
+            printf("Skip next instruction if key in V%X (0x%02X) is not "
+                   "pressed; Keypad value: %d\n",
+                   chip8->inst.X, chip8->V[chip8->inst.X],
+                   chip8->keypad[chip8->V[chip8->inst.X]]);
+        }
+        break;
     default:
         printf("Unimplemented Opcode.\n");
         break; // Unimplemented or invalid opcode
@@ -414,7 +548,7 @@ void emulate_instruct(chip8_t *chip8, config_t *config) {
         (chip8->ram[chip8->PC] << 8) | (chip8->ram[chip8->PC + 1]);
     chip8->PC += 2; // incrementing PC
 
-    // Filling instruction format
+    // TODO : remove instructio struct and move it inside function
     // Filling instruction format
     chip8->inst.NNN = chip8->inst.opcode & 0x0FFF;
     chip8->inst.NN = chip8->inst.opcode & 0x00FF; // Corrected line
@@ -564,7 +698,7 @@ void emulate_instruct(chip8_t *chip8, config_t *config) {
     case 0x0C:
         // 0xCXNN : Sets VX to the result of a bitwise and operation on a random
         // number (Typically: 0 to 255) and NN.
-        chip8->V[chip8->inst.X] = chip8->inst.NN & (rand() % 256);
+        chip8->V[chip8->inst.X] = (rand() % 256) & chip8->inst.NN;
         break;
 
     case 0x0D:
@@ -606,6 +740,108 @@ void emulate_instruct(chip8_t *chip8, config_t *config) {
 
             // Move to the next row (Y-coordinate)
             Y_coord = (Y_coord + 1) % config->window_height;
+        }
+        break;
+
+    case 0x0E:
+        if (chip8->inst.NN == 0x9E) {
+            // 0xEX9E : Skips the next instruction if the key stored in VX is
+            // pressed
+            if (chip8->keypad[chip8->inst.X]) {
+                chip8->PC += 2;
+            }
+
+        } else if (chip8->inst.NN == 0xA1) {
+            // 0xEXA1 : Skips the next instruction if the key stored in VX is
+            // not pressed
+            if (!(chip8->keypad[chip8->inst.X])) {
+                chip8->PC += 2;
+            }
+        }
+        break;
+
+    case 0x0F:
+        switch (chip8->inst.NN) {
+
+        case 0x07:
+            // 0xFX07 : Sets VX to the value of the delay timer.
+            chip8->V[chip8->inst.X] = chip8->delay_timer;
+            break;
+
+        case 0x0A:
+            // 0xFX0A : A key press is awaited, and then stored in VX (blocking
+            // operation)
+            bool keypress = false; // Flag for if key is pressed
+            for (uint8_t i = 0; i < sizeof chip8->keypad; i++) {
+                if (chip8->keypad[i]) {
+                    chip8->V[chip8->inst.X] = i;
+                    keypress = true;
+                    break;
+                }
+            }
+
+            if (!keypress) {
+                chip8->PC -= 2; // Decemrent counter to stay at same instruction
+            }
+            break;
+
+        case 0x15:
+            // 0xFX15 : Sets the delay timer to VX.
+            chip8->delay_timer = chip8->V[chip8->inst.X];
+            break;
+
+            break;
+
+        case 0x18:
+            // 0xFX1E : Sets the sound timer to VX.
+            chip8->sound_timer = chip8->V[chip8->inst.X];
+            break;
+
+        case 0x1E:
+            // 0xFX1E :  dds VX to I. VF is not affected.
+            chip8->I += chip8->V[chip8->inst.X];
+            break;
+
+        case 0x29:
+            // 0xFX29 : Sets I to the location of the sprite for the character
+            // in VX. Characters 0-F (in hexadecimal) are represented by a 4x5
+            // font.
+            chip8->I = chip8->V[chip8->inst.X] * 5;
+
+            break;
+
+        case 0x33:
+            // 0xFX1E : Stores the binary-coded decimal representation of VX,
+            // with the hundreds digit in memory at location in I, the tens
+            // digit at location I+1, and the ones digit at location I+2.
+            uint8_t num = chip8->V[chip8->inst.X];
+            chip8->ram[chip8->I + 2] = num % 10; // One's place
+            num /= 10;                           // popping ones place
+            chip8->ram[chip8->I + 1] = num % 10; // Tenths place
+            num /= 10;                           // popping tens place
+            chip8->ram[chip8->I] = num;          // Hundresths place
+            break;
+
+        case 0x55:
+            // 0xFX1E : Stores from V0 to VX (including VX) in memory, starting
+            // at address I. I remains unmodifed
+            for (uint8_t i = 0; i <= chip8->inst.X; i++) {
+                chip8->ram[chip8->I + i] = chip8->V[i];
+            }
+            break;
+
+        case 0x65:
+            // 0xFX1E : Fills from V0 to VX (including VX) with values from
+            // memory, starting at address I.
+
+            for (uint8_t i = 0; i <= chip8->inst.X; i++) {
+                chip8->V[i] = chip8->ram[chip8->I + i];
+            }
+
+            break;
+
+        default:
+            break;
         }
         break;
 
